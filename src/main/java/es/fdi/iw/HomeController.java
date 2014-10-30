@@ -60,7 +60,7 @@ public class HomeController {
 	public String logout(HttpSession session) {
 		logger.info("User '{}' logged out", session.getAttribute("user"));
 		session.invalidate();
-		return "redirect:home";
+		return "redirect:/";
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class HomeController {
 		logger.info("Setting debug to {}", formDebug);
 		session.setAttribute("debug", 
 				"true".equals(formDebug) ? "true" : "false");
-		return "redirect:home";
+		return "redirect:/";
 	}
 
 	/**
