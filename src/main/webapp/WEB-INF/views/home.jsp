@@ -25,5 +25,7 @@
 		(pero no externamente: no puedes acceder a 'header.jspf' cambiando la URL del navegador)</li>
 </ul>
 
+Pulsa en <a href="about">este enlace</a> para saber más sobre esta aplicación.
+
 </div>
 <%@ include file="../fragments/footer.jspf" %>

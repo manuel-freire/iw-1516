@@ -91,4 +91,13 @@ public class HomeController {
 		
 		return "home";
 	}	
+
+	/**
+	 * A not-very-dynamic view that shows an "about us".
+	 */
+	@RequestMapping(value = "/about", method = RequestMethod.GET)
+	public String about(Locale locale, Model model) {
+		logger.info("User is looking up 'about us'");
+		return "about";
+	}	
 }

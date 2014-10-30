@@ -39,7 +39,8 @@
 	<form action="login" id="formularioLogin" method="POST">
 		<fieldset>
 			<label for="login">Login</label>
-			<input type="hidden" id="source" name="source" value="${request.servletPath}"/>
+			<input type="hidden" id="source" name="source" 
+				value="${requestScope['javax.servlet.forward.servlet_path']}"/>
 			<input type="text" id="login" name="login" placeholder="Login"/>
 			<input type="password" id="pass" name="pass" placeholder="Contraseña"/>
 			<button name="submit" value="login" type="submit">Entrar</button>
