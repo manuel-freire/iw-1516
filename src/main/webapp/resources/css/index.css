@@ -1,0 +1,25 @@
+/* estilos especificos para index.php */
+
+div#principal form label {
+	display: inline-block;
+	width: 5em;
+	text-align: right;
+	vertical-align: top;
+	margin-right: 1em;
+}
+
+div#principal table {
+	width: 100%;
+}
+
+div#principal table col.titulo {
+	width: 70%;
+}
+div#principal table col.autor , 
+div#principal table col.autor {
+	text-align: center
+}
+div#principal table td, div#principal table th {
+	border-bottom: 1px solid #dddddd;
+	padding-left: 5px;
+}

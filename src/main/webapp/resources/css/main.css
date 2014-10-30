@@ -1,0 +1,89 @@
+body {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+div#header {
+	height: 100px; /* alto del logo */
+	background: #ffffff url('../img/logo.jpg') no-repeat fixed;
+	border-bottom: 1px solid black; 
+}
+div#header a#cajaMain {
+	position: absolute;
+	top: 0;
+	left: 50px;
+	height: 100px;
+	width: 250px;
+}
+div#header div#cajaLogin {
+	font-size: small;
+	top: 40px;
+	right: 15px;
+	position: absolute;
+}
+div#header div#cajaLogin form {
+	width: 650px;
+}
+div#header div#cajaLogin span._nota_val {
+	display: none; /* no cabe: que no lo muestre */
+}
+div#header div#cajaLogin span.errorLogin {
+	font-size: smaller;
+	margin-bottom: 0;
+}
+div#header div#cajaLogin fieldset {
+	border: none;
+}
+
+
+div#principal {
+	margin: 0;
+	padding: 10px;
+	min-height: 600px;
+}
+
+div#footer {
+	background: #ffffff;
+	border-top: 1px solid black;
+	color: #aaaaaa;
+	text-align: center;
+	font-size: small;
+}
+
+h1, h2, h3 {
+	font-family: Helvetica;
+	color: #7777aa;
+}
+
+h1 {
+	width: 100%;
+	margin-top: 0px;
+	border-bottom: 1px solid #aaaaaa;
+}
+
+span.tablon {
+	font-family: monospace;
+	font-weight: bold;
+	font-variant: small-caps;
+	font-size: 140%;
+}
+
+input, textarea, select {	margin: 3px; }
+form span._nota_val {
+    display: inline-block;
+    margin-left: 4px;
+    color: red;
+    font-size: small;
+}
+
+div#debug > div {
+	float: left;
+	font-size: 60%;
+	margin-left: 100px;
+}
+
+div#debug table {
+	border: 1px solid gray;
+}

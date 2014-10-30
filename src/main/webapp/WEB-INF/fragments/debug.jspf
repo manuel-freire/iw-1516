@@ -1,0 +1,43 @@
+ <%--
+ 	Used to display debug information
+ --%>
+<c:choose>
+<c:when test="${debug}">
+</div>
+<div id="debug">
+	<div>
+	Parameter Variables
+	<table>
+	<tbody>
+		<c:forEach var="v" items="${paramValues}">
+			<tr><td>${v.key}</td><td>${v.value[0]}</td></tr>
+		</c:forEach>
+	</tbody>
+	</table>
+	</div>
+	<div>
+	Session Variables
+	<table>
+	<tbody>
+		<c:forEach var="v" items="${sessionScope}">
+			<tr><td>${v.key}</td><td>${v.value}</td></tr>
+		</c:forEach>
+	</tbody>
+	</table>
+	</div>
+	<div>
+	Request Variables
+	<table>
+	<tbody>
+		<c:forEach var="v" items="${requestScope}">
+			<tr><td>${v.key}</td><td>${v.value}</td></tr>
+		</c:forEach>
+	</tbody>
+	</div>
+	</table>
+	<a href="debug?debug=false">Ocultar info</a>
+</c:when>
+<c:otherwise>
+	<a href="debug?debug=true">Mostrar info</a>
+</c:otherwise>
+</c:choose>
