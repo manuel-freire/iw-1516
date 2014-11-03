@@ -8,7 +8,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Home</title>
 	<meta charset="utf-8">
 	<title>${pageTitle}</title>
 	<link rel="stylesheet" href="resources/js/jquery-ui-1.11.2/jquery-ui.min.css">
@@ -42,11 +41,11 @@
 			<input type="hidden" id="source" name="source" 
 				value="${requestScope['javax.servlet.forward.servlet_path']}"/>
 			<input type="text" id="login" name="login" placeholder="Login"/>
-			<input type="password" id="pass" name="pass" placeholder="Contraseña"/>
+			<input type="password" id="pass" name="pass" placeholder="ContraseÃ±a"/>
 			<button name="submit" value="login" type="submit">Entrar</button>
 			<a href="register">No tengo</a>
 			<c:if test="${not empty loginError}">
-				<br><span class='errorLogin'>Login o contraseña incorrectos</span>
+				<br><span class='errorLogin'>Login o contraseÃ±a incorrectos</span>
 			</c:if>
 		</fieldset>
 	</form>
