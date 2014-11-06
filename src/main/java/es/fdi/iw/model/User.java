@@ -1,8 +1,14 @@
-package es.ucm.fdi.model;
+package es.fdi.iw.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class User {
 	
+	@Id
 	private String id;
+	
 	private String role;
 	
 	public User(String id, String role) {

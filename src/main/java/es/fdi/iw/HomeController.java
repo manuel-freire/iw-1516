@@ -14,7 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import es.ucm.fdi.model.User;
+import es.fdi.iw.model.User;
 
 /**
  * Handles requests for the application home page.
