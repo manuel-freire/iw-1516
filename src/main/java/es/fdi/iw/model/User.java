@@ -11,6 +11,8 @@ public class User {
 	
 	private String role;
 	
+	public User() {}
+	
 	public User(String id, String role) {
 		this.id = id;
 		this.role = role;
