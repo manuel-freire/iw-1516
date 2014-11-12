@@ -3,9 +3,12 @@
      xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
          http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
 
-  <persistence-unit name="Default">
-     <provider>org.hibernate.ejb.HibernatePersistence</provider>
-     <jta-data-source>java:/comp/env/jdbc/DefaultDS</jta-data-source>
+  <persistence-unit name="demoPU" transaction-type="RESOURCE_LOCAL">
+  	<provider>org.hibernate.ejb.HibernatePersistence</provider>
+  	 <!-- this generates a warning; but replacing with 
+  	      org.hibernate.jpa.HibernatePersistenceProvider as suggested 
+  	      breaks hibernate3:hbm2ddl -->
+     <non-jta-data-source>java:comp/env/jdbc/demoDS</non-jta-data-source>
      <properties>
      	<property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml" />     
      </properties>
