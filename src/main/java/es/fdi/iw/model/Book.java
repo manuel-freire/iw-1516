@@ -5,22 +5,35 @@ import java.sql.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Book {
-	private Long id;
+	private long id;
 	private String title;
 	private String description;
 	private Date date;
+	private User owner;
 
 	@Id
 	@GeneratedValue
-	public Long getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(long id) {
 		this.id = id;
+	}	
+	
+	@ManyToOne(targetEntity=User.class)
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
 	}
 
 	public String getTitle() {

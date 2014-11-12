@@ -87,3 +87,14 @@ div#debug > div {
 div#debug table {
 	border: 1px solid gray;
 }
+
+table.users {
+	border: 1px solid gray;
+	font-size: small;
+}
+
+table.users td {
+	border: 1px solid gray;
+	margin: 0;
+	padding: 5px;
+}

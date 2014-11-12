@@ -2,7 +2,6 @@
 <div id="principal">
 
 <h1>Sobre esta aplicación</h1>
-
 <ul>
 	<li>El autor de esta aplicación es Manuel Freire, y los fuentes actualizados están disponibles
 		<a href="https://github.com/manuel-freire/iw">en Github</a>.
@@ -13,6 +12,19 @@
 		páginas, y que me puedo registrar (hacer login) en cualquier página si pierdo mi sesión --
 		pero "sin cambiar" de página.</li>
 </ul>
+
+<h1>Usuarios del sistema</h1>
+<table class="users">
+<thead>
+	<tr><td>id<td>login<td>rol<td>hash<td>salt</tr>
+</thead>
+<tbody>
+	<c:forEach items="${users}" var="u">
+		<tr><td>${u.id}<td>${u.login}<td>${u.role}
+		<td>${u.hashedAndSalted}<td>${u.salt}</tr>
+	</c:forEach>
+</tbody>	
+</table>
 
 </div>
 <%@ include file="../fragments/footer.jspf" %>
