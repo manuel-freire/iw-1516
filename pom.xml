@@ -230,14 +230,6 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <configuration>
-                    <mainClass>org.test.int1.Main</mainClass>
-                </configuration>
-            </plugin>
             
             <!-- 
             	HSQL + Hibernate: create DBs; 
@@ -257,19 +249,12 @@
           			<componentProperties>
 						<persistenceunit>Default</persistenceunit>
 						<outputfilename>schema.ddl</outputfilename>
-						<drop>true</drop>
+						<drop>false</drop>
 						<create>true</create>
 						<export>false</export>
 						<format>true</format>
 					</componentProperties>
-        		</configuration>
-         		<dependencies>
-            		<dependency>
-        				<groupId>org.hsqldb</groupId>
-        				<artifactId>hsqldb</artifactId>
-        				<version>2.0.0</version>
-    				</dependency>  				
-        		</dependencies>
+        		</configuration>         		
       		</plugin>      		
         </plugins>
     </build>
