@@ -253,7 +253,7 @@
             			</component>
           			</components>
           			<componentProperties>
-						<persistenceunit>Default</persistenceunit>
+						<persistenceunit>demoPU</persistenceunit>
 						<outputfilename>schema.ddl</outputfilename>
 						<drop>false</drop>
 						<create>true</create>
