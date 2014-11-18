@@ -166,7 +166,21 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>2.0.0</version>
-    	</dependency>  		
+    	</dependency>
+    	
+    	<!-- ioutils: much, much better than default IO -->
+    	<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<!-- file uploading -->
+		<dependency>
+  			<groupId>commons-fileupload</groupId>
+  			<artifactId>commons-fileupload</artifactId>
+  			<version>1.2.2</version>
+		</dependency>
 
 		<!-- @Inject -->
 		<dependency>

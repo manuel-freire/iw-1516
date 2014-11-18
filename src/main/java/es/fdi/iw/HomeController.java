@@ -1,5 +1,12 @@
 package es.fdi.iw;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -11,14 +18,18 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import es.fdi.iw.model.User;
 
@@ -85,6 +96,61 @@ public class HomeController {
 		logger.info("User '{}' logged out", session.getAttribute("user"));
 		session.invalidate();
 		return "redirect:/";
+	}
+
+	/**
+	 * Uploads a photo for a user
+	 * @param id of user 
+	 * @param photo to upload
+	 * @return
+	 */
+	@RequestMapping(value="/user", method=RequestMethod.POST)
+    public @ResponseBody String handleFileUpload(@RequestParam("photo") MultipartFile photo,
+    		@RequestParam("id") String id){
+        if (!photo.isEmpty()) {
+            try {
+                byte[] bytes = photo.getBytes();
+                BufferedOutputStream stream =
+                        new BufferedOutputStream(
+                        		new FileOutputStream(ContextInitializer.getFile("user", id)));
+                stream.write(bytes);
+                stream.close();
+                return "You successfully uploaded " + id + 
+                		" into " + ContextInitializer.getFile("user", id).getAbsolutePath() + "!";
+            } catch (Exception e) {
+                return "You failed to upload " + id + " => " + e.getMessage();
+            }
+        } else {
+            return "You failed to upload a photo for " + id + " because the file was empty.";
+        }
+    }
+
+	/**
+	 * Displays user details
+	 */
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public String user(HttpSession session, HttpServletRequest request) {		
+		return "user";
+	}	
+	
+	/**
+	 * Returns a users' photo
+	 * @param id id of user to get photo from
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/user/photo", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] userPhoto(@RequestParam("id") String id) throws IOException {
+	    File f = ContextInitializer.getFile("user", id);
+	    InputStream in = null;
+	    if (f.exists()) {
+	    	in = new BufferedInputStream(new FileInputStream(f));
+	    } else {
+	    	in = new BufferedInputStream(
+	    			this.getClass().getClassLoader().getResourceAsStream("unknown-user.jpg"));
+	    }
+	    
+	    return IOUtils.toByteArray(in);
 	}
 	
 	/**

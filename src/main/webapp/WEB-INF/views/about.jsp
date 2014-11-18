@@ -21,7 +21,7 @@
 <tbody>
 	<c:forEach items="${users}" var="u">
 		<tr><td>${u.id}<td>${u.login}<td>${u.role}
-		<td>${u.hashedAndSalted}<td>${u.salt}</tr>
+		<td>${u.hashedAndSalted}<td>${u.salt}<td><img src="user/photo?id=${u.id}"/></tr>
 	</c:forEach>
 </tbody>	
 </table>
