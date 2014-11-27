@@ -22,7 +22,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.fdi.iw.model.Author;
 import es.fdi.iw.model.Book;
 import es.fdi.iw.model.User;
 
@@ -149,6 +152,32 @@ public class HomeController {
 		model.addAttribute("prefix", "../");
 		return "book";
 	}	
+	
+	/**
+	 * Load book authors for a given book via post; return as JSON
+	 */
+	@RequestMapping(value = "/bookAuthors")
+	@ResponseBody
+	@Transactional // needed to allow lazy init to work
+	public ResponseEntity<String> bookAuthors(@RequestParam("id") long id, HttpServletRequest request) {
+		try {
+			Book book = (Book)entityManager.createNamedQuery("bookById")
+				.setParameter("idParam", id).getSingleResult();
+			List<Author> authors = book.getAuthors();
+			StringBuilder sb = new StringBuilder("[");
+			for (Author a : authors) {
+				if (sb.length()>1) sb.append(",");
+				sb.append("{ "
+						+ "\"id\": \"" + a.getId() + "\", "
+						+ "\"familyName\": \"" + a.getFamilyName() + "\", "
+						+ "\"lastName\": \"" + a.getLastName() + "\"}");
+			}
+			return new ResponseEntity<String>(sb + "]", HttpStatus.OK);
+		} catch (NoResultException nre) {
+			logger.error("No such book: {}", id, nre);
+		}
+		return new ResponseEntity<String>("Error: libro no existe", HttpStatus.BAD_REQUEST);		
+	}			
 	
 	/**
 	 * Displays author details
