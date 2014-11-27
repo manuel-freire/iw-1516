@@ -25,12 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.fdi.iw.model.Book;
 import es.fdi.iw.model.User;
 
 /**
@@ -131,6 +133,36 @@ public class HomeController {
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public String user(HttpSession session, HttpServletRequest request) {		
 		return "user";
+	}	
+
+	/**
+	 * Displays book details
+	 */
+	@RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
+	public String book(@PathVariable("id") long id, Model model) {
+		try {
+			model.addAttribute("book", entityManager.createNamedQuery("bookById")
+				.setParameter("idParam", id).getSingleResult());
+		} catch (NoResultException nre) {
+			logger.error("No such book: {}", id, nre);
+		}
+		model.addAttribute("prefix", "../");
+		return "book";
+	}	
+	
+	/**
+	 * Displays author details
+	 */
+	@RequestMapping(value = "/author/{id}", method = RequestMethod.GET)
+	public String author(@PathVariable("id") long id, Model model) {		
+		try {
+			model.addAttribute("author", entityManager.createNamedQuery("authorById")
+				.setParameter("idParam", id).getSingleResult());
+		} catch (NoResultException nre) {
+			logger.error("No such author: {}", id, nre);
+		}
+		model.addAttribute("prefix", "../");
+		return "author";
 	}	
 	
 	/**

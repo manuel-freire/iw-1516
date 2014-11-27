@@ -3,6 +3,7 @@
   	- pageTitle
   	- pageExtraCSS: additional CSS files to include (from resources/css; via link rel-stylesheet href)
   	- pageExtraScripts: additional JS files to include (from resources/js; via script src)
+  	- prefix: useful to back-trace if path-based url parameters are in use
  --%>
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -10,17 +11,17 @@
 <html>
 <head>
 	<title>${pageTitle}</title>
-	<link rel="stylesheet" href="resources/js/jquery-ui-1.11.2/jquery-ui.min.css">
-	<script src="resources/js/jquery-ui-1.11.2/external/jquery/jquery.js"></script>
-	<script src="resources/js/jquery-ui-1.11.2/jquery-ui.min.js"></script>
-	<link rel="stylesheet" href="resources/css/main.css">
+	<link rel="stylesheet" href="${prefix}resources/js/jquery-ui-1.11.2/jquery-ui.min.css">
+	<script src="${prefix}resources/js/jquery-ui-1.11.2/external/jquery/jquery.js"></script>
+	<script src="${prefix}resources/js/jquery-ui-1.11.2/jquery-ui.min.js"></script>
+	<link rel="stylesheet" href="${prefix}resources/css/main.css">
 	<%-- pageExtraScripts --%>
 	<c:forEach var="i" items="${pageExtraScripts}" >
-        <script src="resources/js/${i}"></script>
+        <script src="${prefix}resources/js/${i}"></script>
     </c:forEach>
 	<%-- pageExtraCSS --%>
 	<c:forEach var="i" items="${pageExtraCSS}" >
-        <link rel="stylesheet" href="resources/css/${i}">
+        <link rel="stylesheet" href="${prefix}resources/css/${i}">
     </c:forEach>
 </head>
 <body>
@@ -31,11 +32,11 @@
 	<c:choose>
 	<c:when test="${not empty user}">
 		Registrado como 
-		<a href="user?u=${user.id}">${user.login}</a> [ ${user.role} ] 
-		( <a href="logout">Salir</a> )
+		<a href="${prefix}user?u=${user.id}">${user.login}</a> [ ${user.role} ] 
+		( <a href="${prefix}logout">Salir</a> )
 	</c:when>
 	<c:otherwise>
-	<form action="login" id="formularioLogin" method="POST">
+	<form action="${prefix}login" id="formularioLogin" method="POST">
 		<fieldset>
 			<label for="login">Login</label>
 			<input type="hidden" id="source" name="source" 
@@ -43,7 +44,7 @@
 			<input type="text" id="login" name="login" placeholder="Login"/>
 			<input type="password" id="pass" name="pass" placeholder="Contraseña"/>
 			<button name="submit" value="login" type="submit">Entrar</button>
-			<a href="register">No tengo</a>
+			<a href="${prefix}register">No tengo</a>
 			<c:if test="${not empty loginError}">
 				<br><span class='errorLogin'>Login o contraseÃ±a incorrectos</span>
 			</c:if>
