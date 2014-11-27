@@ -3,15 +3,7 @@
 
 <h1>Aplicación de ejemplo de IW</h1>
 
-<h3>En esta versión: "includes" jspf y soporte para sesiones</h3>
-
-<ul>
-	<li>admin / cualquier contraseña de más de 3 caracteres = login de administrador</li>
-	<li>cualquier otro login de más de 3 caracteres / contraseña de más de 3 caracteres = usuario raso</li>
-	<li>si pulsas "logout" se cierra la sesión</li>
-</ul>
-
-<h3>Cosas a mirar</h3>
+<h3>En esta versión: algo de AJAX</h3>
 <ul>
 	<li>el código de <code>src/main/webapp/WEB-INF/header.jspf</code>: una cabecera "rica", 
 		uso de control de flujo JSP vía "tags" de la JSP Standard Tag Library (JSTL): 
@@ -23,6 +15,12 @@
 		<code>mi-contexto/resources</code>; 
 		aquellos bajo <code>src/main/webapp/WEB-INF</code> sólo se pueden acceder desde dentro del JSP 
 		(pero no externamente: no puedes acceder a 'header.jspf' cambiando la URL del navegador)</li>
+	<li>usuarios existentes: admin, user, test (contraseña: "hola")</li>
+	<li>usuario inexistente con contraseña de <b>4</b> caracteres: crea el usuario</li>
+	<li>si no crea usuario, y login ó contraseña no corresponden a un usuario existente, no permite login</li>
+	<li>si pulsas "logout" se cierra la sesión</li>
+	<li>un <a href="book/1">libro</a> y sus autores (¡usa <b>Ajax</b>!)</li>
+	<li>un <a href="author/1">autor</a> y sus libros - ¿serías capaz de hacer que se viesen de forma bonita y con enlaces?</li>
 </ul>
 
 Pulsa en <a href="about">este enlace</a> para saber más sobre esta aplicación.
