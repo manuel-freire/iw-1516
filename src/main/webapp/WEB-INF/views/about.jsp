@@ -1,4 +1,22 @@
 <%@ include file="../fragments/header.jspf" %>
+
+<script type="text/javascript">
+$(function() {
+	$(".x").click(function(){
+		var id=$(this).attr("id").substring("del_".length);
+		console.log("deleting", id);
+		delUser(id);
+	});
+})
+
+function delUser(id) {
+	$.post("delUser", {id: id, csrf: "${e:forJavaScript(csrf_token)}"}, 
+			function(data) {
+				$("#del_"+id).parent().parent().remove();
+			});
+}
+</script>
+
 <div id="principal">
 
 <h1>Sobre esta aplicación</h1>
@@ -20,8 +38,9 @@
 </thead>
 <tbody>
 	<c:forEach items="${users}" var="u">
-		<tr><td>${u.id}<td>${u.login}<td>${u.role}
-		<td>${u.hashedAndSalted}<td>${u.salt}<td><img src="user/photo?id=${u.id}"/></tr>
+		<tr><td>${u.id}<td>${e:forHtmlContent(u.login)}<td>${u.role}
+		<td>${u.hashedAndSalted}<td>${u.salt}<td><img src="user/photo?id=${u.id}"/>
+		<td><button class="x" id="del_${u.id}">x</button></tr>
 	</c:forEach>
 </tbody>	
 </table>

@@ -11,6 +11,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -71,6 +72,8 @@ public class HomeController {
 				if (u.isPassValid(formPass)) {
 					logger.info("pass was valid");				
 					session.setAttribute("user", u);
+					// sets the anti-csrf token
+					getTokenForSession(session);
 				} else {
 					logger.info("pass was NOT valid");
 					model.addAttribute("loginError", "error en usuario o contraseña");
@@ -82,6 +85,8 @@ public class HomeController {
 					User user = User.createUser(formLogin, formPass, "user");
 					entityManager.persist(user);				
 					session.setAttribute("user", user);
+					// sets the anti-csrf token
+					getTokenForSession(session);					
 				} else {
 					logger.info("no such login: {}", formLogin);
 				}
@@ -92,6 +97,27 @@ public class HomeController {
 		// redirects to view from which login was requested
 		return "redirect:" + formSource;
 	}
+	
+	/**
+	 * Delete a user; return JSON indicating success or failure
+	 */
+	@RequestMapping(value = "/delUser", method = RequestMethod.POST)
+	@ResponseBody
+	@Transactional // needed to allow DB change
+	public ResponseEntity<String> bookAuthors(@RequestParam("id") long id,
+			@RequestParam("csrf") String token, HttpSession session) {
+		if ( ! isAdmin(session) || ! isTokenValid(session, token)) {
+			return new ResponseEntity<String>("Error: no such user or bad auth", 
+					HttpStatus.FORBIDDEN);
+		} else if (entityManager.createNamedQuery("delUser")
+				.setParameter("idParam", id).executeUpdate() == 1) {
+			return new ResponseEntity<String>("Ok: user " + id + " removed", 
+					HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Error: no such user", 
+					HttpStatus.BAD_REQUEST);
+		}
+	}			
 	
 	/**
 	 * Logout (also returns to home view).
@@ -265,4 +291,38 @@ public class HomeController {
 		model.addAttribute("pageTitle", "IW: Quienes somos");
 		return "about";
 	}	
+	
+	/**
+	 * Checks the anti-csrf token for a session against a value
+	 * @param session
+	 * @param token
+	 * @return the token
+	 */
+	static boolean isTokenValid(HttpSession session, String token) {
+	    Object t=session.getAttribute("csrf_token");
+	    return (t != null) && t.equals(token);
+	}
+	
+	/**
+	 * Returns an anti-csrf token for a session, and stores it in the session
+	 * @param session
+	 * @return
+	 */
+	static String getTokenForSession (HttpSession session) {
+	    String token=UUID.randomUUID().toString();
+	    session.setAttribute("csrf_token", token);
+	    return token;
+	}
+	
+	/** 
+	 * Returns true if the user is logged in and is an admin
+	 */
+	static boolean isAdmin(HttpSession session) {
+		User u = (User)session.getAttribute("user");
+		if (u != null) {
+			return u.getRole().equals("admin");
+		} else {
+			return false;
+		}
+	}
 }

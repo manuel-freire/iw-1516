@@ -18,7 +18,9 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries({
     @NamedQuery(name="userByLogin",
-        query="select u from User u where u.login = :loginParam")
+        query="select u from User u where u.login = :loginParam"),
+    @NamedQuery(name="delUser",
+    	query="delete from User u where u.id= :idParam")
 })
 public class User {	
 	private long id;
