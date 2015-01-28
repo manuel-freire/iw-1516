@@ -15,6 +15,11 @@
   		<param-name>contextInitializerClasses</param-name>
   		<param-value>es.fdi.iw.ContextInitializer</param-value>
 	</context-param>
+	
+	<context-param>
+		<param-name>defaultHtmlEscape</param-name>
+		<param-value>true</param-value>
+	</context-param>
 		
 	<!-- Creates the Spring Container shared by all Servlets and Filters -->
 	<listener>

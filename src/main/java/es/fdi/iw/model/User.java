@@ -20,7 +20,9 @@ import javax.persistence.OneToMany;
     @NamedQuery(name="userByLogin",
         query="select u from User u where u.login = :loginParam"),
     @NamedQuery(name="delUser",
-    	query="delete from User u where u.id= :idParam")
+    	query="delete from User u where u.id= :idParam"),
+    @NamedQuery(name="tutoria",
+    	query="select b from Book b, in (b.copies) c where c.owner.id = :idParam")
 })
 public class User {	
 	private long id;
@@ -28,7 +30,7 @@ public class User {
 	private String role;
 	private String hashedAndSalted;
 	private String salt;
-	private List<Book> ownedBooks;
+	private List<OwnedBook> ownedBooks;
 
 	public User() {}
 
@@ -142,14 +144,12 @@ public class User {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-
-	@OneToMany(targetEntity=Book.class)
-	@JoinColumn(name="owner_id") // <-- this avoids creating an extra User_Book table
-	public List<Book> getOwnedBooks() {
+	
+	@OneToMany(targetEntity=OwnedBook.class , mappedBy="owner")
+	public List<OwnedBook> getOwnedBooks() {
 		return ownedBooks;
 	}
-
-	public void setOwnedBooks(List<Book> ownedBooks) {
+	public void setOwnedBooks(List<OwnedBook> ownedBooks) {
 		this.ownedBooks = ownedBooks;
 	}
 

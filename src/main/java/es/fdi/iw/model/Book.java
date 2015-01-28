@@ -23,9 +23,9 @@ public class Book {
 	private String title;
 	private String description;
 	private Date date;
-	private User owner;
 	private List<Author> authors;
-
+	private List<OwnedBook> copies;
+	
 	@Id
 	@GeneratedValue
 	public long getId() {
@@ -36,9 +36,12 @@ public class Book {
 		this.id = id;
 	}	
 	
-	@ManyToOne(targetEntity=User.class)
-	public User getOwner() {
-		return owner;
+	@OneToMany(targetEntity=OwnedBook.class, mappedBy="book")
+	public List<OwnedBook> getCopies() {
+		return copies;
+	}
+	public void setCopies(List<OwnedBook> copies) {
+		this.copies = copies;
 	}
 
 
@@ -50,10 +53,6 @@ public class Book {
 		this.authors = authors;
 	}
 	
-	public void setOwner(User owner) {
-		this.owner = owner;
-	}
-
 	public String getTitle() {
 		return title;
 	}
