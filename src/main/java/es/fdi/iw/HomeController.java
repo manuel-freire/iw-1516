@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
@@ -219,6 +221,31 @@ public class HomeController {
 		model.addAttribute("prefix", "../");
 		return "author";
 	}	
+	
+	/**
+	 * Returns a users' photo as a file with the requested name
+	 * @param id id of user to get photo from
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value="/downloadAs", method = RequestMethod.GET)
+	public byte[] userPhoto(HttpServletResponse response, @RequestParam("id") String id,
+			@RequestParam("name") String name) throws IOException {
+	    File f = ContextInitializer.getFile("user", id);
+	    InputStream in = null;
+	    if (f.exists()) {
+	    	in = new BufferedInputStream(new FileInputStream(f));
+	    } else {
+	    	in = new BufferedInputStream(
+	    			this.getClass().getClassLoader().getResourceAsStream("unknown-user.jpg"));
+	    }
+	    response.setHeader("Content-Disposition", "attachment; filename=" + name); 
+	    String type = Files.probeContentType(f.toPath());
+	    if (type != null) {
+	    	response.setContentType(type);
+	    }
+	    return IOUtils.toByteArray(in);
+	}
 	
 	/**
 	 * Returns a users' photo
