@@ -180,6 +180,35 @@ public class HomeController {
 	}	
 	
 	/**
+	 * Add a book to the system
+	 * 
+	 * to test: open webapp, paste the following into the console:
+	 * $.get("bookAuthors", {id: 2}, function(data) { console.log(data); })
+	 *   (returns 1 author)
+	 * $.get("addAuthoredBook", {author_id: 2, book_id: 2}, function(data) { console.log(data); })
+	 *   (returns ok)
+	 * $.get("bookAuthors", {id: 2}, function(data) { console.log(data); })
+	 *   (returns 2 authors)
+	 */
+	@RequestMapping(value = "/addAuthoredBook")
+	@ResponseBody
+	@Transactional // needed to allow lazy init to work
+	public ResponseEntity<String> addAuthoredBook(
+			@RequestParam("author_id") long author_id,
+			@RequestParam("book_id") long book_id,
+			HttpServletRequest request) {
+		try {
+			Book b = entityManager.find(Book.class, book_id);
+			Author a = entityManager.find(Author.class, author_id);				
+			a.getWritings().add(b);
+			return new ResponseEntity<String>("Ok: autor añadido a libro", HttpStatus.OK);
+		} catch (NoResultException nre) {
+			logger.error("No such book, or no such author", nre);
+		}
+		return new ResponseEntity<String>("Error: imposible añadir autor", HttpStatus.BAD_REQUEST);		
+	}		
+	
+	/**
 	 * Load book authors for a given book via post; return as JSON
 	 */
 	@RequestMapping(value = "/bookAuthors")
