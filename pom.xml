@@ -8,23 +8,20 @@
 	<packaging>war</packaging>
 	<version>1.0.0-BUILD-SNAPSHOT</version>
 	<properties>
-		<java-version>1.6</java-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java-version>1.7</java-version>
 		<org.aspectj-version>1.6.10</org.aspectj-version>
-		<org.slf4j-version>1.6.6</org.slf4j-version>
-		
-		<!-- Keep in sync... Copied&Pasted form the PetClinic example -->
-		<spring-framework.version>3.2.2.RELEASE</spring-framework.version>
-		<org.springframework-version>3.2.2.RELEASE</org.springframework-version>
 
-		<!-- Hibernate / JPA -->
-		<hibernate.version>4.3.1.Final</hibernate.version>
-		<spring-data-jpa.version>1.2.0.RELEASE</spring-data-jpa.version>
-		
-		<!-- Bean validation -->
-		<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
+        <!-- Spring -->
+        <spring-framework.version>4.2.2.RELEASE</spring-framework.version>
+        <spring-data-jpa.version>1.9.0.RELEASE</spring-data-jpa.version>
+        <spring-boot.version>1.2.7.RELEASE</spring-boot.version>
+        
+		<!-- Hibernate -->
+		<hibernate.version>5.0.3.Final</hibernate.version>
 		
 		<!-- Database access -->
-		<tomcat-jdbc.version>7.0.42</tomcat-jdbc.version>
+		<tomcat.version>8.0.24</tomcat.version>
 		<hsqldb.version>2.3.2</hsqldb.version>
 	</properties>
 	<dependencies>
@@ -32,7 +29,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${org.springframework-version}</version>
+            <version>${spring-framework.version}</version>
 			<exclusions>
 				<!-- Exclude Commons Logging in favor of SLF4j -->
 				<exclusion>
@@ -44,7 +41,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${org.springframework-version}</version>
+            <version>${spring-framework.version}</version>
 		</dependency>
 				
 		<!-- AspectJ -->
@@ -53,49 +50,6 @@
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
 		</dependency>	
-		
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${org.slf4j-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${org.slf4j-version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.15</version>
-			<exclusions>
-				<exclusion>
-					<groupId>javax.mail</groupId>
-					<artifactId>mail</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>javax.jms</groupId>
-					<artifactId>jms</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jdmk</groupId>
-					<artifactId>jmxtools</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>com.sun.jmx</groupId>
-					<artifactId>jmxri</artifactId>
-				</exclusion>
-			</exclusions>
-			<scope>runtime</scope>
-		</dependency>
 
 		<!-- SPRING, SPRING, SPRINGITY SPRING -->
 		<dependency>
@@ -106,22 +60,22 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-			<version>${spring-framework.version}</version>
+            <version>${spring-framework.version}</version>
 		</dependency>
 		<dependency> 
      		<groupId>org.springframework</groupId> 
      		<artifactId>spring-aspects</artifactId> 
-     		<version>${spring-framework.version}</version>
+            <version>${spring-framework.version}</version>
 		</dependency>
 		<dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-        	<version>${spring-framework.version}</version>
+            <version>${spring-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>${spring-framework.version}</version>
+            <version>${spring-framework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -133,7 +87,27 @@
 			<artifactId>spring-tx</artifactId>
 			<version>${spring-framework.version}</version>
 		</dependency>
-
+        
+        <!-- Spring boot -->
+        <dependency>
+            <!-- Import dependency management from Spring Boot -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-dependencies</artifactId>
+            <version>${spring-boot.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>            
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+            <version>${spring-boot.version}</version>
+        </dependency>
 		<!-- Database connection pool 
 		See here for more details on commons-dbcp versus tomcat-jdbc: 
     	http://blog.ippon.fr/2013/03/13/improving-the-performance-of-the-spring-petclinic-sample-application-part-3-of-5/
@@ -141,27 +115,27 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
-			<version>${tomcat-jdbc.version}</version>
+			<version>${tomcat.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-jasper</artifactId>
+			<version>${tomcat.version}</version>
+		</dependency>
+		
 		<!-- HIBERNATE -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>${hibernate.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<version>${hibernate-validator.version}</version>
-		</dependency>
-		
+		</dependency>	
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-ehcache</artifactId>
 			<version>${hibernate.version}</version>
 		</dependency>
+        
   		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
@@ -206,6 +180,7 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
+    		<scope>provided</scope>			
 		</dependency>
 		
 		<!-- XSS -->
@@ -221,13 +196,7 @@
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
-			<artifactId>catalina</artifactId>
-			<version>6.0.20</version>
-			<scope>test</scope>
-		</dependency>        
+		</dependency>     
 	</dependencies>
     <build>
         <plugins>
@@ -257,7 +226,18 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
-            
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>                
+            </plugin>
             <!-- 
             	HSQL + Hibernate: create DBs; 
             	write 'mvn compile hibernate3:hbm2ddl' at console to regenerate 
