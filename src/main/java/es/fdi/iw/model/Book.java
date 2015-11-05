@@ -15,8 +15,10 @@ import javax.persistence.OneToMany;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name="bookById",
-        query="select o from Book o where o.id = :idParam")
+    @NamedQuery(name="allBooks",
+            query="select o from Book o"),
+    @NamedQuery(name="deleteBook",
+            query="delete from Book o where o.id=:idParam")
 })
 public class Book {
 	private long id;

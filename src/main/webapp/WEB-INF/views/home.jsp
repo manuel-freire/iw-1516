@@ -18,7 +18,7 @@
 	<li>usuarios existentes: admin, user, test (contraseña: "hola")</li>
 	<li>usuario inexistente con contraseña de <b>4</b> caracteres: crea el usuario</li>
 	<li>si no crea usuario, y login ó contraseña no corresponden a un usuario existente, no permite login</li>
-	<li>si pulsas "logout" se cierra la sesión</li>
+	<li>si pulsas en <a href="logout">logout</a> se cierra la sesión</li>
 	<li>un <a href="book/1">libro</a> y sus autores (¡usa <b>Ajax</b>!)</li>
 	<li>un <a href="author/1">autor</a> y sus libros - ¿serías capaz de hacer que se viesen de forma bonita y con enlaces?</li>
 </ul>

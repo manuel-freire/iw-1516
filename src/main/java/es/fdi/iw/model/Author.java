@@ -12,8 +12,8 @@ import javax.persistence.NamedQuery;
 
 @Entity
 @NamedQueries({
-    @NamedQuery(name="authorById",
-        query="select o from Author o where o.id = :idParam")
+    @NamedQuery(name="allAuthors",
+            query="select a from Author a")
 })
 public class Author {
 	private long id;

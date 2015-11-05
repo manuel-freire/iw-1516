@@ -35,10 +35,14 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
 				<exclusion>
-					<groupId>org.apache.tomcat.embed</groupId>			
-					<artifactId>tomcat-embed-core</artifactId>
-				</exclusion>
-			</exclusions>
+          			<groupId>org.apache.tomcat.embed</groupId>
+          			<artifactId>tomcat-embed-el</artifactId>
+        		</exclusion>
+				<exclusion>
+          			<groupId>org.apache.tomcat.embed</groupId>
+          			<artifactId>tomcat-embed-jasper</artifactId>
+        		</exclusion>
+ 			</exclusions>
 		</dependency>	
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,7 +52,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-		</dependency>			       
+		</dependency>	     
 		    	
     	<!-- ioutils: much, much better than default IO -->
     	<dependency>
@@ -74,15 +78,19 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
-			<version>${tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-core</artifactId>
-			<version>${tomcat.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-el</artifactId>
+			<scope>provided</scope>
+		</dependency>
+				
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
@@ -99,7 +107,6 @@
 			</plugin>
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
-                <version>2.9</version>
                 <configuration>
                     <additionalProjectnatures>
                         <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
@@ -121,32 +128,7 @@
                         </goals>
                     </execution>
                 </executions>                
-            </plugin>
-            <!-- 
-            	HSQL + Hibernate: create DBs; 
-            	write 'mvn compile hibernate3:hbm2ddl' at console to regenerate 
-            -->
-			<plugin>
-        		<groupId>org.codehaus.mojo</groupId>
-        		<artifactId>hibernate3-maven-plugin</artifactId>
-        		<version>2.2</version>
-        		<configuration>
-          			<components>
-            			<component>
-              				<name>hbm2ddl</name>
-              				<implementation>jpaconfiguration</implementation>
-            			</component>
-          			</components>
-          			<componentProperties>
-						<persistenceunit>demoPU</persistenceunit>
-						<outputfilename>schema.ddl</outputfilename>
-						<drop>false</drop>
-						<create>true</create>
-						<export>false</export>
-						<format>true</format>
-					</componentProperties>
-        		</configuration>         		
-      		</plugin>      		
+            </plugin>            
         </plugins>
     </build>
 </project>

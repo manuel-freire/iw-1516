@@ -22,7 +22,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -172,8 +171,9 @@ public class HomeController {
 	@RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
 	public String book(@PathVariable("id") long id, Model model) {
 		try {
-			model.addAttribute("book", entityManager.createNamedQuery("bookById")
-				.setParameter("idParam", id).getSingleResult());
+			model.addAttribute("book", entityManager.find(Book.class, id));
+			model.addAttribute("owners", entityManager.createNamedQuery("allUsers").getResultList());
+			model.addAttribute("authors", entityManager.createNamedQuery("allAuthors").getResultList());
 		} catch (NoResultException nre) {
 			logger.error("No such book: {}", id, nre);
 		}
@@ -182,6 +182,65 @@ public class HomeController {
 	}	
 	
 	/**
+	 * Delete a book
+	 */
+	@RequestMapping(value = "/book/{id}", method = RequestMethod.DELETE)
+	@Transactional
+	@ResponseBody
+	public String rmbook(@PathVariable("id") long id, Model model) {
+		try {
+			Book b = entityManager.find(Book.class, id);
+			for (Author a : b.getAuthors()) {
+				a.getWritings().remove(b);
+				entityManager.persist(a);
+			}
+			entityManager.remove(b);
+			return "OK";
+		} catch (NoResultException nre) {
+			logger.error("No such book: {}", id, nre);
+			return "ERR";
+		}
+	}		
+	
+	/*
+	 * List all books
+	 */
+	@RequestMapping(value = "/books", method = RequestMethod.GET)
+	@Transactional
+	public String books(Model model) {
+		model.addAttribute("books", entityManager.createNamedQuery("allBooks").getResultList());
+		model.addAttribute("owners", entityManager.createNamedQuery("allUsers").getResultList());
+		model.addAttribute("authors", entityManager.createNamedQuery("allAuthors").getResultList());
+		return "books";
+	}	
+	
+	/*
+	 * Add a book
+	 */
+	@RequestMapping(value = "/book", method = RequestMethod.POST)
+	@Transactional
+	public String book(@RequestParam("owner") long ownerId,
+			@RequestParam("authors") long[] authorIds,
+			@RequestParam("title") String title,
+			@RequestParam("description") String description, Model model) {
+		Book b = new Book();
+		b.setTitle(title);
+		b.setDescription(description);
+		for (long aid : authorIds) {
+			// adding authors to book is useless, since author is the owning side (= has no mappedBy)
+			Author a = entityManager.find(Author.class, aid);
+			a.getWritings().add(b);
+			entityManager.persist(a);
+		}
+		b.setOwner(entityManager.getReference(User.class, ownerId));
+		entityManager.persist(b);
+		entityManager.flush();
+		logger.info("Book " + b.getId() + " written ok - owned by " + b.getOwner().getLogin() 
+				+ " written by " + b.getAuthors());
+		
+		return "redirect:book/" + b.getId();
+	}	
+	/**
 	 * Load book authors for a given book via post; return as JSON
 	 */
 	@RequestMapping(value = "/bookAuthors")
@@ -189,8 +248,7 @@ public class HomeController {
 	@Transactional // needed to allow lazy init to work
 	public ResponseEntity<String> bookAuthors(@RequestParam("id") long id, HttpServletRequest request) {
 		try {
-			Book book = (Book)entityManager.createNamedQuery("bookById")
-				.setParameter("idParam", id).getSingleResult();
+			Book book = (Book)entityManager.find(Book.class, id);
 			List<Author> authors = book.getAuthors();
 			StringBuilder sb = new StringBuilder("[");
 			for (Author a : authors) {
@@ -213,8 +271,7 @@ public class HomeController {
 	@RequestMapping(value = "/author/{id}", method = RequestMethod.GET)
 	public String author(@PathVariable("id") long id, Model model) {		
 		try {
-			model.addAttribute("author", entityManager.createNamedQuery("authorById")
-				.setParameter("idParam", id).getSingleResult());
+			model.addAttribute("author", entityManager.find(Author.class, id));
 		} catch (NoResultException nre) {
 			logger.error("No such author: {}", id, nre);
 		}
