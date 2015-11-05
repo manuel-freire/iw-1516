@@ -28,7 +28,7 @@ public class ContextInitializer implements ServletContextInitializer {
     @Override
     public void onStartup(ServletContext servletContext	) {
     	try {
-    		props.load(getClass().getResourceAsStream("/app.properties")); 
+    		props.load(getClass().getResourceAsStream("/application.properties")); 
     		baseFolder = new File(props.getProperty("base"));
         	log.info("base folder is {}", baseFolder.getAbsolutePath());
         	if (!baseFolder.isDirectory()) {

@@ -144,7 +144,7 @@ public class User {
 	}
 
 	@OneToMany(targetEntity=Book.class)
-	@JoinColumn(name="owner_id") // <-- this avoids creating an extra User_Book table
+	@JoinColumn(name="owner") // <-- this avoids creating an extra User_Book table
 	public List<Book> getOwnedBooks() {
 		return ownedBooks;
 	}

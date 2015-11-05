@@ -1,4 +1,4 @@
-package es.fdi.iw;
+package es.fdi.iw.controller;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import es.fdi.iw.ContextInitializer;
 import es.fdi.iw.model.Author;
 import es.fdi.iw.model.Book;
 import es.fdi.iw.model.User;
@@ -286,7 +287,8 @@ public class HomeController {
 	@Transactional
 	public String about(Locale locale, Model model) {
 		logger.info("User is looking up 'about us'");
-		List<User> us = entityManager.createQuery("select u from User u").getResultList();
+		@SuppressWarnings("unchecked")
+		List<User> us = (List<User>)entityManager.createQuery("select u from User u").getResultList();
 		System.err.println(us.size());
 		model.addAttribute("users", us);
 		model.addAttribute("pageTitle", "IW: Quienes somos");
