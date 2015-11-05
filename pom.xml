@@ -53,8 +53,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>	     
-		    	
-    	<!-- ioutils: much, much better than default IO -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+			<version>4.0.3.RELEASE</version>
+		</dependency>
+		<!-- ioutils: much, much better than default IO -->
     	<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>

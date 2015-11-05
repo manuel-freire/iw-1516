@@ -17,6 +17,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
@@ -41,7 +42,7 @@ import es.fdi.iw.model.Book;
 import es.fdi.iw.model.User;
 
 /**
- * Handles requests for the application home page.
+ * Una aplicación de ejemplo para IW.
  */
 @Controller
 public class HomeController {
@@ -56,15 +57,19 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@Transactional
-	public String login(HttpServletRequest request, Model model, HttpSession session) {
-		String formLogin = request.getParameter("login");
-		String formPass = request.getParameter("pass");
-		String formSource = request.getParameter("source");
+	public String login(
+			@RequestParam("login") String formLogin,
+			@RequestParam("pass") String formPass,
+			@RequestParam("source") String formSource,
+			HttpServletRequest request, HttpServletResponse response, 
+			Model model, HttpSession session) {
+		
 		logger.info("Login attempt from '{}' while visiting '{}'", formLogin, formSource);
 		
 		// validate request
 		if (formLogin == null || formLogin.length() < 4 || formPass == null || formPass.length() < 4) {
 			model.addAttribute("loginError", "usuarios y contraseñas: 4 caracteres mínimo");
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		} else {
 			User u = null;
 			try {
@@ -78,6 +83,7 @@ public class HomeController {
 				} else {
 					logger.info("pass was NOT valid");
 					model.addAttribute("loginError", "error en usuario o contraseña");
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				}
 			} catch (NoResultException nre) {
 				if (formPass.length() == 4) {
@@ -127,7 +133,7 @@ public class HomeController {
 	public String logout(HttpSession session) {
 		logger.info("User '{}' logged out", session.getAttribute("user"));
 		session.invalidate();
-		return "redirect:/";
+		return "redirect:home";
 	}
 
 	/**
@@ -166,16 +172,16 @@ public class HomeController {
 	}	
 
 	/**
-	 * Displays book details
+	 * Displays single-book details
 	 */
 	@RequestMapping(value = "/book/{id}", method = RequestMethod.GET)
-	public String book(@PathVariable("id") long id, Model model) {
-		try {
-			model.addAttribute("book", entityManager.find(Book.class, id));
-			model.addAttribute("owners", entityManager.createNamedQuery("allUsers").getResultList());
-			model.addAttribute("authors", entityManager.createNamedQuery("allAuthors").getResultList());
-		} catch (NoResultException nre) {
-			logger.error("No such book: {}", id, nre);
+	public String book(@PathVariable("id") long id, HttpServletResponse response, Model model) {
+		Book b = entityManager.find(Book.class, id);
+		if (b == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			logger.error("No such book: {}", id);
+		} else {
+			model.addAttribute("book", b);
 		}
 		model.addAttribute("prefix", "../");
 		return "book";
@@ -187,7 +193,7 @@ public class HomeController {
 	@RequestMapping(value = "/book/{id}", method = RequestMethod.DELETE)
 	@Transactional
 	@ResponseBody
-	public String rmbook(@PathVariable("id") long id, Model model) {
+	public String rmbook(@PathVariable("id") long id, HttpServletResponse response, Model model) {
 		try {
 			Book b = entityManager.find(Book.class, id);
 			for (Author a : b.getAuthors()) {
@@ -195,9 +201,11 @@ public class HomeController {
 				entityManager.persist(a);
 			}
 			entityManager.remove(b);
+			response.setStatus(HttpServletResponse.SC_OK);
 			return "OK";
 		} catch (NoResultException nre) {
 			logger.error("No such book: {}", id, nre);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return "ERR";
 		}
 	}		

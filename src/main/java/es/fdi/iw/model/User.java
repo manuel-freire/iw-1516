@@ -1,7 +1,5 @@
 package es.fdi.iw.model;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Random;
 
@@ -10,10 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @NamedQueries({
@@ -25,11 +24,16 @@ import javax.persistence.OneToMany;
     	query="delete from User u where u.id= :idParam")
 })
 public class User {	
+	
+    private static BCryptPasswordEncoder bcryptEncoder = new BCryptPasswordEncoder();
+	
+	// do not change these fields - all web applications with user authentication need them
 	private long id;
 	private String login;
 	private String role;
 	private String hashedAndSalted;
-	private String salt;
+		
+	// change fields below here to suit your application
 	private List<Book> ownedBooks;
 
 	public User() {}
@@ -37,19 +41,13 @@ public class User {
 	public static User createUser(String login, String pass, String role) {
 		User u = new User();
 		u.login = login;
-		Random r = new Random();
-		
-		// generate new, random salt; build hashedAndSalted
-		byte[] saltBytes = new byte[16];
-		r.nextBytes(saltBytes);
-		u.salt = byteArrayToHexString(saltBytes);
-		u.hashedAndSalted = generateHashedAndSalted(pass, u.salt);
+		u.hashedAndSalted = generateHashedAndSalted(pass);
 		u.role = role;
 		return u;
 	}
 	
 	public boolean isPassValid(String pass) {
-		return generateHashedAndSalted(pass, this.salt).equals(hashedAndSalted);		
+		return bcryptEncoder.matches(pass, hashedAndSalted);		
 	}
 	
 	/**
@@ -60,13 +58,19 @@ public class User {
 	 * if the DB is compromised. Note that brute-force is possible, but it will
 	 * have to be targeted (ie.: use the same salt)
 	 */
-	public static String generateHashedAndSalted(String pass, String salt) {
-		byte[] saltBytes = hexStringToByteArray(salt);
+	public static String generateHashedAndSalted(String pass) {
+		/*
+		Código viejo: sólo 1 iteración de SHA-1. bCrypt es mucho más seguro (itera 1024 veces...)
+		
+		Además, bcryptEncoder guarda la sal junto a la contraseña
+		byte[] saltBytes = hexStringToByteArray(user.salt);
 		byte[] passBytes = pass.getBytes();
 		byte[] toHash = new byte[saltBytes.length + passBytes.length];
 		System.arraycopy(passBytes, 0, toHash, 0, passBytes.length);
 		System.arraycopy(saltBytes, 0, toHash, passBytes.length, saltBytes.length);
-		return byteArrayToHexString(hash(toHash));
+		return byteArrayToHexString(sha1hash(toHash));
+		*/
+		return bcryptEncoder.encode(pass);
 	}	
 
 	/**
@@ -96,20 +100,6 @@ public class User {
 		return r;
 	}
 	
-	/**
-	 * Returns the SHA-1 of a byte array
-	 * @return
-	 */
-	public static byte[] hash(byte[] bytes) {
-		MessageDigest md = null;
-	    try {
-	        md = MessageDigest.getInstance("SHA-1");
-	    } catch(NoSuchAlgorithmException e) {
-	        e.printStackTrace();
-	    } 
-	    return md.digest(bytes);
-	}
-	
 	@Id
 	@GeneratedValue
 	public long getId() {
@@ -137,14 +127,6 @@ public class User {
 		this.hashedAndSalted = hashedAndSalted;
 	}
 
-	public String getSalt() {
-		return salt;
-	}
-
-	public void setSalt(String salt) {
-		this.salt = salt;
-	}
-
 	@OneToMany(targetEntity=Book.class)
 	@JoinColumn(name="owner") // <-- this avoids creating an extra User_Book table
 	public List<Book> getOwnedBooks() {
@@ -164,6 +146,6 @@ public class User {
 	}
 
 	public String toString() {
-		return "" + id + " " + login + " " + hashedAndSalted + " " + salt;
+		return "" + id + " " + login + " " + hashedAndSalted;
 	}
 }

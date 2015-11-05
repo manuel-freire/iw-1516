@@ -34,12 +34,12 @@ function delUser(id) {
 <h1>Usuarios del sistema</h1>
 <table class="users">
 <thead>
-	<tr><td>id<td>login<td>rol<td>hash<td>salt</tr>
+	<tr><td>id<td>login<td>rol<td>hash+salt<td>photo</tr>
 </thead>
 <tbody>
 	<c:forEach items="${users}" var="u">
 		<tr><td>${u.id}<td>${e:forHtmlContent(u.login)}<td>${u.role}
-		<td>${u.hashedAndSalted}<td>${u.salt}<td><img src="user/photo?id=${u.id}"/>
+		<td>${u.hashedAndSalted}<td><img src="user/photo?id=${u.id}"/>
 		<td><button class="x" id="del_${u.id}">x</button></tr>
 	</c:forEach>
 </tbody>	
