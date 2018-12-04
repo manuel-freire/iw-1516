@@ -292,19 +292,35 @@ public class HomeController {
 	 * @param id id of user to get photo from
 	 * @return
 	 */
+	 /*
+	 * ResponseBody indica que exactamente hay que devolver un string de bytes, y que
+	 * no debe tratar de interpretarlo "a su aire"
+	 */
 	@ResponseBody
-	@RequestMapping(value="/user/photo", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
+	/*
+	 * RequestMapping pone una cabecera a la respuesta que indica que el array de 
+	 * bytes que devuelve es una imágen para que la trate como tal, adicionalmente es
+	 * una imagen de tipo JPEG
+	*/
+	@RequestMapping(value="/user/photo", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE) 
 	public byte[] userPhoto(@RequestParam("id") String id) throws IOException {
-	    File f = ContextInitializer.getFile("user", id);
+	    
+	    
+	    //Con esto se obtiene el descriptor de fichero de la foto del usuario "user"
+	    File f = ContextInitializer.getFile("user", id); 
+	    /*
+		Para tomar todos los archivos de un directorio
+		for (file f: CI.getFolder().listFiles)
+	     */
 	    InputStream in = null;
 	    if (f.exists()) {
-	    	in = new BufferedInputStream(new FileInputStream(f));
+	    	in = new BufferedInputStream(new FileInputStream(f)); //Devolvemos los bytes que contienen este fichero
 	    } else {
 	    	in = new BufferedInputStream(
 	    			this.getClass().getClassLoader().getResourceAsStream("unknown-user.jpg"));
 	    }
 	    
-	    return IOUtils.toByteArray(in);
+	    return IOUtils.toByteArray(in); 
 	}
 	
 	/**
@@ -393,4 +409,5 @@ public class HomeController {
 			return false;
 		}
 	}
+	
 }
